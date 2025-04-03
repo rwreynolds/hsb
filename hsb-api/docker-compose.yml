@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  hsb-api:
+    build: .
+    container_name: hsb-api
+    ports:
+      - "5000:5000"
+    expose: 
+      - "5000"
+    env_file:
+      - .env
+    restart: unless-stopped
+    networks:
+      - nginx-network
+    # Use the dockeradmin user ID from the host system
+    user: "${UID:-1000}:${GID:-1000}"
+
+networks:
+  nginx-network:
+    external: true
+    name: nginx-proxy

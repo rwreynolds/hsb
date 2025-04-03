@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  nginx-proxy:
+    image: nginx:latest
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx-proxy/nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx-proxy/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx-proxy/certbot/conf:/etc/letsencrypt
+      - ./nginx-proxy/certbot/www:/var/www/certbot
+      - ./nginx-proxy/logs/nginx:/var/log/nginx
+    restart: always
+    networks:
+      - nginx-network
+
+  hsb-api:
+    build: ./hsb-api
+    container_name: hsb-api
+    ports:
+      - "5000:5000"
+    expose: 
+      - "5000"
+    env_file:
+      - ./hsb-api/.env
+    restart: unless-stopped
+    networks:
+      - nginx-network
+    # Use the dockeradmin user ID from the host system
+    user: "${UID:-1000}:${GID:-1000}"
+
+  hsb-ui:
+    build: ./hsb-ui
+    container_name: hsb-ui
+    ports:
+      - "3000:3000"
+    expose:
+      - "3000"
+    restart: unless-stopped
+    networks:
+      - nginx-network
+    # Use the dockeradmin user ID from the host system
+    user: "${UID:-1000}:${GID:-1000}"
+
+networks:
+  nginx-network:
+    driver: bridge
