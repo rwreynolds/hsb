@@ -9,13 +9,14 @@ services:
       - "443:443"
     volumes:
       - ./nginx-proxy/nginx/conf.d:/etc/nginx/conf.d
-      - ./nginx-proxy/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./nginx-proxy/certbot/conf:/etc/letsencrypt
-      - ./nginx-proxy/certbot/www:/var/www/certbot
+      - /etc/letsencrypt:/etc/letsencrypt
       - ./nginx-proxy/logs/nginx:/var/log/nginx
     restart: always
     networks:
       - nginx-network
+    depends_on:
+      - hsb-api
+      - hsb-ui
 
   hsb-api:
     build: ./hsb-api

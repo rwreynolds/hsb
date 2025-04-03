@@ -61,20 +61,21 @@ export default function Home() {
 
   return (
     <>
+      <Head>
+        <title>Ham Shack Buddy</title>
+      </Head>
       
-        Ham Shack Buddy
-      
-      
+      <div className="container">
+        <header>
+          <h1>Ham Shack Buddy</h1>
+          <p>Your AI Amateur Radio Assistant</p>
+        </header>
         
-          Ham Shack Buddy
-          Your AI Amateur Radio Assistant
-        
-        
-        
-          
-          
-        
-      
+        <div className="chat-container">
+          <ChatHistory messages={messages} />
+          <ChatInput onSendMessage={handleSendMessage} disabled={loading} />
+        </div>
+      </div>
     </>
   );
 }

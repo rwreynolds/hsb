@@ -18,6 +18,10 @@ CORS(app, resources={r"/api/*": {"origins": os.getenv("CORS_ORIGINS", "*")}})
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 ASSISTANT_ID = os.getenv("OPENAI_ASSISTANT_ID")
 
+@app.route('/api/ping', methods=['GET'])
+def ping():
+    return jsonify({"status": "ok", "message": "API is running"})
+
 @app.route('/api/chat', methods=['POST'])
 def chat():
     # Get user message from request
