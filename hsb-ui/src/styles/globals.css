@@ -19,6 +19,16 @@ header {
   width: 100%;
 }
 
+/* Option 3: With additional styling for emphasis */
+.elmer-note {
+  font-size: 0.85rem;
+  color: #272626; /* Slightly muted color */
+  font-style: italic;
+  font-weight: bold;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
 /* Chat window container - this is the centered window */
 .chat-container {
   width: 80%;
