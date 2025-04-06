@@ -1,11 +1,13 @@
 // filepath: /Users/mrrobot/VSCodeProjects/openai-assistants/hsb/hsb-ui/src/components/ChatMessage.js
-import ReactMarkdown from "react-markdown";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { materialLight } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { materialLight } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import ReactMarkdown from 'react-markdown';
 
 export default function ChatMessage({ message }) {
-  console.log("ChatMessage received:", message); // Debugging log
+  // For debugging
+  console.log("ChatMessage received:", message); 
 
+  // Destructure the message props
   const { role, content } = message || {};
 
   return (
