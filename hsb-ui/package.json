@@ -9,13 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "next": "^13.4.12",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "axios": "^1.4.0"
+    "axios": "^1.4.0",
+    "next": "^15.2.4",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-syntax-highlighter": "^15.6.1",
+    "simplebar": "^6.3.0",
+    "simplebar-react": "^3.3.0"
   },
   "devDependencies": {
-    "eslint": "^8.45.0",
-    "eslint-config-next": "^13.4.12"
+    "eslint": "^9.24.0",
+    "eslint-config-next": "^15.2.4"
   }
 }

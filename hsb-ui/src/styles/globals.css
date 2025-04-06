@@ -10,6 +10,7 @@ body {
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   background-color: #f5f5f5;
   height: 100%;
+  line-height: 1.6;
 }
 
 .container {
@@ -19,6 +20,10 @@ body {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 header {
@@ -29,10 +34,12 @@ header {
 header h1 {
   color: #2c3e50;
   margin-bottom: 0.5rem;
+  font-size: 2rem;
 }
 
 header p {
   color: #7f8c8d;
+  font-size: 1rem;
 }
 
 .chat-container {
@@ -43,12 +50,37 @@ header p {
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  border: 1px solid #ddd;
+}
+
+.chat-history-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.toggle-button {
+  margin-bottom: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.toggle-button:hover {
+  background-color: #2980b9;
 }
 
 .chat-history {
-  flex: 1;
+  flex: 1; /* Makes the chat history take up all available space */
   overflow-y: auto;
   padding: 1rem;
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #ddd;
 }
 
 .empty-chat {
@@ -62,6 +94,7 @@ header p {
 .chat-message {
   display: flex;
   margin-bottom: 1rem;
+  align-items: flex-start;
 }
 
 .chat-message.user {
@@ -70,19 +103,25 @@ header p {
 
 .message-bubble {
   max-width: 70%;
-  padding: 0.75rem 1rem;
+  padding: 1rem;
   border-radius: 12px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .chat-message.user .message-bubble {
   background-color: #3498db;
   color: white;
+  text-align: right;
 }
 
-.chat-message.assistant .message-bubble {
+chat-message.assistant .message-bubble {
   background-color: #f1f1f1;
   color: #333;
+  text-align: left;
 }
 
 .message-sender {
@@ -93,6 +132,61 @@ header p {
 
 .message-content {
   line-height: 1.4;
+}
+
+.message-content pre {
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  padding: 0.75rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.message-content code {
+  background-color: #ecf0f1;
+  color: #2c3e50;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.message-content p {
+  margin-bottom: 1rem;
+}
+
+message-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+message-content table th,
+message-content table td {
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+  text-align: left;
+}
+
+message-content table th {
+  background-color: #f1f1f1;
+  font-weight: bold;
+}
+
+message-content ul,
+message-content ol {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+message-content li {
+  margin-bottom: 0.5rem;
+}
+
+.chat-input-container {
+  padding: 1rem;
+  border-top: 1px solid #e1e1e1;
+  background-color: white;
 }
 
 .chat-input {
@@ -108,6 +202,7 @@ header p {
   border: 1px solid #ddd;
   border-radius: 4px;
   margin-right: 0.5rem;
+  font-size: 1rem;
 }
 
 .chat-input button {
@@ -118,6 +213,7 @@ header p {
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.2s;
+  font-size: 1rem;
 }
 
 .chat-input button:hover {
@@ -127,4 +223,26 @@ header p {
 .chat-input button:disabled {
   background-color: #95a5a6;
   cursor: not-allowed;
+}
+
+.chat-input-footer {
+  position: sticky;
+  bottom: 0;
+  background-color: white;
+  border-top: 1px solid #ddd;
+  padding: 1rem;
+}
+
+.disclaimer {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: #7f8c8d;
+  text-align: center;
+}
+
+.elmer-note {
+  font-size: 0.8rem; /* Font size 8px */
+  color: #7f8c8d;
+  text-align: center;
+  margin-top: 0.5rem;
 }

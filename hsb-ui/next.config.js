@@ -5,10 +5,10 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'http://hsb-api:5000/api/:path*', // Proxy to Backend
+        destination: 'http://127.0.0.1:5000/api/:path*', // Ensure this matches your backend's URL
       },
     ];
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
