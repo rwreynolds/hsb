@@ -22,12 +22,40 @@ ASSISTANT_ID = os.getenv("OPENAI_ASSISTANT_ID")
 def ping():
     return jsonify({"status": "ok", "message": "API is running"})
 
+@app.route('/api/assistants', methods=['GET'])
+def get_assistants():
+    try:
+        assistants = client.beta.assistants.list(limit=100)
+        assistants_list = []
+        
+        for assistant in assistants.data:
+            # Extract relevant information
+            assistants_list.append({
+                'id': assistant.id,
+                'name': assistant.name,
+                'description': assistant.description,
+                'model': assistant.model
+            })
+            
+        return jsonify({
+            'assistants': assistants_list
+        })
+    except Exception as e:
+        return jsonify({
+            'error': str(e)
+        }), 500
+        
 @app.route('/api/chat', methods=['POST'])
 def chat():
     # Get user message from request
     data = request.json
     user_message = data.get('message')
     thread_id = data.get('thread_id')
+    assistant_id = data.get('assistant_id', ASSISTANT_ID)  # Use specified assistant_id or default
+    
+    # Debug logging
+    print(f"Request data: {data}")
+    print(f"Using assistant_id: {assistant_id}")
     
     # Create a new thread if one doesn't exist
     if not thread_id:
@@ -44,7 +72,7 @@ def chat():
     # Run the assistant on the thread
     run = client.beta.threads.runs.create(
         thread_id=thread_id,
-        assistant_id=ASSISTANT_ID
+        assistant_id=assistant_id
     )
     
     # Wait for the run to complete

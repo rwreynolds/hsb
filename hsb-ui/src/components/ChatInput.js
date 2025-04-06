@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function ChatInput({ onSendMessage, disabled }) {
+export default function ChatInput({ onSendMessage, disabled, placeholder = "Type your message here..." }) {
   const [message, setMessage] = useState('');
 
   const handleSubmit = (e) => {
@@ -17,7 +17,7 @@ export default function ChatInput({ onSendMessage, disabled }) {
         type="text"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        placeholder="Type your message here..."
+        placeholder={placeholder}
         disabled={disabled}
       />
       <button type="submit" disabled={disabled || !message.trim()}>

@@ -2,6 +2,8 @@
 import { useState } from 'react';
 import ChatContainer from '@/components/ChatContainer';
 import ChatInput from '@/components/ChatInput';
+import AssistantSelector from '@/components/AssistantSelector';
+import { sendMessage } from '@/services/api';
 
 export async function getStaticProps() {
   try {
@@ -44,10 +46,43 @@ export default function Home({ apiStatus }) {
   const [previousUserMessage, setPreviousUserMessage] = useState(null); // Stores the user message for pairing
   const [loading, setLoading] = useState(false);
   const [threadId, setThreadId] = useState(null); // Store the thread ID for session memory
+  
+  // New state for selected assistant
+  const [selectedAssistant, setSelectedAssistant] = useState(null);
+  const [pageTitle, setPageTitle] = useState("Ham Shack Buddy"); // Default title
+  
+ // Handle assistant selection
+const handleSelectAssistant = (assistant) => {
+  console.log('Changing assistant to:', assistant);
+  
+  // Reset conversation when changing assistants
+  setHistoryMessages([]);
+  setCurrentMessage(null);
+  setPreviousUserMessage(null);
+  
+  // IMPORTANT: Reset the thread ID when changing assistants
+  setThreadId(null);
+  
+  // Update selected assistant and page title
+  setSelectedAssistant(assistant);
+  setPageTitle(assistant.name || "AI Assistant");
+  
+  console.log(`Selected assistant: ${assistant.name} (${assistant.id})`);
+};
 
   const handleSendMessage = async (message) => {
-    if (!message.trim()) return;
-
+    // Verify if an assistant is selected
+    if (!message.trim() || !selectedAssistant) {
+      if (!selectedAssistant) {
+        alert("Please select an assistant first");
+      }
+      return;
+    }
+  
+    // Debug logging
+    console.log('Selected assistant:', selectedAssistant);
+    console.log('Sending message with assistant ID:', selectedAssistant.id);
+  
     // Create the user message
     const userMessage = { role: 'user', content: message };
     
@@ -65,22 +100,12 @@ export default function Home({ apiStatus }) {
     setCurrentMessage(userMessage);
     setPreviousUserMessage(userMessage);
     setLoading(true);
-
+  
     try {
-      // Send message to the backend
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message, thread_id: threadId }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to send message');
-      }
-
-      const data = await response.json();
+      // Use the API service to send the message with selected assistant ID
+      const data = await sendMessage(message, threadId, selectedAssistant.id);
       console.log('Backend response:', data);
-
+  
       // Capture thread_id if it's the first message
       if (data.thread_id && !threadId) {
         setThreadId(data.thread_id);
@@ -89,8 +114,6 @@ export default function Home({ apiStatus }) {
       // Set assistant response as current message (paired with user message in previousUserMessage)
       setCurrentMessage({ role: 'assistant', content: data.response });
       
-      // Note: We don't move anything to history here - we wait until the next message
-      // to move both user message and assistant response as a pair
     } catch (error) {
       console.error('Error sending message:', error);
       
@@ -99,7 +122,6 @@ export default function Home({ apiStatus }) {
         role: 'assistant',
         content: 'Error: Unable to process your message.',
       });
-      // Same approach - we'll move this pair to history on next message
     } finally {
       setLoading(false);
     }
@@ -113,20 +135,35 @@ export default function Home({ apiStatus }) {
   return (
     <div className="container">
       <header>
-        <h1>Ham Shack Buddy</h1>
-        <p>Your AI Amateur Radio Assistant</p>
-        <p className="elmer-note">
-          CQ CQ! Ham Shack Buddy is your AI Elmer, but it's still just a bot. Double-check your info before keying up!
-        </p>
+        <h1>{pageTitle}</h1>
+        <p>{selectedAssistant?.description || "Your AI Assistant"}</p>
+        
+        {/* Add the AssistantSelector component here */}
+        <div className="assistant-selector-container">
+          <AssistantSelector 
+            onSelectAssistant={handleSelectAssistant} 
+            currentAssistantId={selectedAssistant?.id}
+          />
+        </div>
+        
+        {!selectedAssistant && (
+          <p className="assistant-prompt">Please select an assistant to begin chatting</p>
+        )}
       </header>
+      
       <ChatContainer
         historyMessages={historyMessages}
         currentMessage={currentMessage}
         previousUserMessage={previousUserMessage}
         onHideHistory={handleHideHistory}
       />
+      
       <footer className="chat-input-footer">
-        <ChatInput onSendMessage={handleSendMessage} disabled={loading} />
+        <ChatInput 
+          onSendMessage={handleSendMessage} 
+          disabled={loading || !selectedAssistant} 
+          placeholder={selectedAssistant ? "Type your message here..." : "Select an assistant first"}
+        />
         <p className="disclaimer">
           AI-generated content. Verify info independently. Not a substitute for licensed guidance.
         </p>
