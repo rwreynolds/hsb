@@ -214,3 +214,85 @@ header {
     max-width: 85%;
   }
 }
+
+/* Chat History Scroll Containment Styles */
+.chat-history-content {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  height: 250px; /* Fixed height */
+  overflow: hidden; /* Prevent external scrolling */
+}
+
+.message-index-list {
+  width: 30%;
+  height: 100%;
+  overflow-y: auto;
+  background-color: #f9f9f9;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 0.5rem;
+}
+
+.chat-history-scroll {
+  flex: 1;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.chat-history {
+  width: 100%;
+}
+
+.message-index-list ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.message-index-list li {
+  padding: 0.5rem;
+  cursor: pointer;
+  border-radius: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background-color 0.2s;
+}
+
+.message-index-list li:hover {
+  background-color: #f0f0f0;
+}
+
+.message-index-list li.selected {
+  background-color: #e0e0e0;
+  font-weight: bold;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .chat-history-content {
+    flex-direction: column;
+    height: auto;
+    max-height: 400px;
+  }
+
+  .message-index-list {
+    width: 100%;
+    max-height: 150px;
+    margin-bottom: 1rem;
+  }
+
+  .chat-history-scroll {
+    max-height: 250px;
+  }
+}
+
+/* Prevent SimpleBar from causing page scroll */
+.simplebar-content-wrapper {
+  overflow: auto !important;
+}
+
+.simplebar-content {
+  overflow: visible !important;
+}
