@@ -10,7 +10,7 @@ const nextConfig = {
     ];
   },
   experimental: {
-    allowedDevOrigins: ['http://127.0.0.1:3000'], // Add your development origin here
+    allowedDevOrigins: ['localhost:3000', '127.0.0.1:3000', '192.168.1.198:3000'],
   },
 };
 
