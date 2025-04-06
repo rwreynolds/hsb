@@ -3,35 +3,49 @@ import { useState } from 'react';
 import SimpleBar from 'simplebar-react';
 import 'simplebar-react/dist/simplebar.min.css';
 import ChatMessage from './ChatMessage';
- 
-export default function ChatHistory({ messages }) {
-  const [isVisible, setIsVisible] = useState(true);
 
-  const toggleVisibility = () => {
-    setIsVisible((prev) => !prev);
+export default function ChatHistory({ historyMessages = [], currentMessage, onHideHistory }) {
+  console.log('Current message in ChatHistory:', currentMessage); // Debugging log
+
+  const [isHistoryVisible, setIsHistoryVisible] = useState(true);
+
+  const toggleHistoryVisibility = () => {
+    setIsHistoryVisible((prev) => !prev);
+    onHideHistory?.(!isHistoryVisible); // Notify parent about visibility change if callback exists
   };
 
   return (
     <div className="chat-history-container">
-      {/* Toggle Button */}
-      <button className="toggle-button" onClick={toggleVisibility}>
-        {isVisible ? 'Hide Chat History' : 'Show Chat History'}
+      {/* Toggle Button for History */}
+      <button className="toggle-button" onClick={toggleHistoryVisibility}>
+        {isHistoryVisible ? 'Hide Chat History' : 'Show Chat History'}
       </button>
 
-      {/* Conditionally Render Chat History */}
-      {isVisible && (
-        <SimpleBar style={{ maxHeight: '400px', width: '100%' }} className="chat-history">
-          {messages.length === 0 ? (
+      {/* History Area */}
+      {isHistoryVisible && (
+        <SimpleBar style={{ maxHeight: '200px', width: '100%' }} className="chat-history">
+          {Array.isArray(historyMessages) && historyMessages.length === 0 ? (
             <div className="empty-chat">
-              <p>No messages yet. Start a conversation!</p>
+              <p>No previous messages.</p>
             </div>
           ) : (
-            messages.map((message, index) => (
+            historyMessages.map((message, index) => (
               <ChatMessage key={index} message={message} />
             ))
           )}
         </SimpleBar>
       )}
+
+      {/* Current Message Area */}
+      <div className="current-message">
+        {currentMessage ? (
+          <ChatMessage message={currentMessage} />
+        ) : (
+          <div className="empty-chat">
+            <p>No current message.</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -29,15 +29,21 @@ export async function getStaticProps() {
 }
 
 export default function Home({ apiStatus }) {
-  const [messages, setMessages] = useState([]);
+  const [historyMessages, setHistoryMessages] = useState([]); // Stores all previous messages
+  const [currentMessage, setCurrentMessage] = useState(null); // Stores the current message
   const [loading, setLoading] = useState(false);
   const [threadId, setThreadId] = useState(null); // Store the thread ID for session memory
 
   const handleSendMessage = async (message) => {
     if (!message.trim()) return;
 
-    // Add user message to chat
-    setMessages((prev) => [...prev, { role: 'user', content: message }]);
+    // Move the current message to history
+    if (currentMessage) {
+      setHistoryMessages((prev) => [...prev, currentMessage]);
+    }
+
+    // Set the new user message as the current message
+    setCurrentMessage({ role: 'user', content: message });
     setLoading(true);
 
     try {
@@ -53,20 +59,21 @@ export default function Home({ apiStatus }) {
       }
 
       const data = await response.json();
+      console.log('Backend response:', data); // Debugging log
 
       // Capture the thread_id from the response if it's the first message
       if (data.thread_id && !threadId) {
         setThreadId(data.thread_id);
       }
 
-      // Add assistant response to chat
-      setMessages((prev) => [...prev, { role: 'assistant', content: data.response }]);
+      // Set the assistant's response as the current message
+      setCurrentMessage({ role: 'assistant', content: data.response });
     } catch (error) {
       console.error('Error sending message:', error);
-      setMessages((prev) => [
-        ...prev,
-        { role: 'assistant', content: 'Error: Unable to process your message.' },
-      ]);
+      setCurrentMessage({
+        role: 'assistant',
+        content: 'Error: Unable to process your message.',
+      });
     } finally {
       setLoading(false);
     }
@@ -85,7 +92,10 @@ export default function Home({ apiStatus }) {
           CQ CQ! Ham Shack Buddy is your AI Elmer, but it’s still just a bot. Double-check your info before keying up!
         </p>
       </header>
-      <ChatContainer messages={messages} />
+      <ChatContainer
+        historyMessages={historyMessages}
+        currentMessage={currentMessage} // Pass currentMessage correctly
+      />
       <footer className="chat-input-footer">
         <ChatInput onSendMessage={handleSendMessage} disabled={loading} />
         <p className="disclaimer">

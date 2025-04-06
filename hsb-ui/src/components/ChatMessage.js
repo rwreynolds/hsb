@@ -6,7 +6,7 @@ import { materialLight } from "react-syntax-highlighter/dist/cjs/styles/prism";
 export default function ChatMessage({ message }) {
   console.log("ChatMessage received:", message); // Debugging log
 
-  const { role, content } = message;
+  const { role, content } = message || {};
 
   return (
     <div className={`chat-message ${role}`}>

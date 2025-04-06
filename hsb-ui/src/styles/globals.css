@@ -56,31 +56,25 @@ header p {
 .chat-history-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
   width: 100%;
 }
 
-.toggle-button {
-  margin-bottom: 1rem;
-  padding: 0.5rem 1rem;
-  background-color: #3498db;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.toggle-button:hover {
-  background-color: #2980b9;
-}
-
 .chat-history {
-  flex: 1; /* Makes the chat history take up all available space */
+  max-height: 200px;
   overflow-y: auto;
+  margin-bottom: 1rem;
   padding: 1rem;
   background-color: #f9f9f9;
   border-bottom: 1px solid #ddd;
+}
+
+.current-message {
+  flex: 1;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 1rem;
 }
 
 .empty-chat {
