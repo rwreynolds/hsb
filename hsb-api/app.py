@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
 import os
+from flask_sqlalchemy import SQLAlchemy
 from openai import OpenAI
 import time
 
@@ -11,8 +12,24 @@ load_dotenv()
 # Initialize Flask app
 app = Flask(__name__)
 
+# Read from environment variables
+db_user = os.getenv('DB_USER', 'mrrobot')
+db_password = os.getenv('DB_PASSWORD')  # No default for security
+db_host = os.getenv('DB_HOST', '172.17.0.1')
+db_port = os.getenv('DB_PORT', '5432')
+db_name = os.getenv('DB_NAME', 'aiasstdb')
+
+# Construct the URI dynamically
+app.config['SQLALCHEMY_DATABASE_URI'] = (
+    f'postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}'
+)
+db = SQLAlchemy(app)
+
 # Configure CORS for Next.js frontend
 CORS(app, resources={r"/api/*": {"origins": os.getenv("CORS_ORIGINS", "*")}})
+
+# Configure SQLAlchemy for PostgreSQL
+SQLALCHEMY_DATABASE_URI = 'postgresql://mrrobot:RW091857rwr!@172.17.0.1:5432/aiasstdb'
 
 # Configure OpenAI client
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
